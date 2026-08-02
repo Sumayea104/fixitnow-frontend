@@ -12,26 +12,32 @@ export interface AuthResponse {
   success: boolean;
   message: string;
   data: {
+    token: string;
     accessToken: string;
     user: User;
   };
 }
 
 export const authService = {
+
   login: async (data: LoginInput): Promise<AuthResponse> => {
-    return api.post<AuthResponse>('/auth/login', data);
+    const response = await api.post<AuthResponse>('/auth/login', data);
+    return response;
   },
 
   register: async (data: RegisterInput): Promise<AuthResponse> => {
-    return api.post<AuthResponse>('/auth/register', data);
+    const response = await api.post<AuthResponse>('/auth/register', data);
+    return response;
   },
 
   getMe: async (): Promise<{ success: boolean; data: { user: User } }> => {
     return api.get<{ success: boolean; data: { user: User } }>('/auth/me');
   },
 
-  token:
-    typeof window !== 'undefined'
-      ? localStorage.getItem('token')
-      : null,
+  getToken: () => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
 };

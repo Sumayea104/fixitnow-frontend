@@ -15,7 +15,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '../../../components/ui/form';
+} from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 
 import { useAuth } from '../hooks/useAuth';
@@ -24,7 +24,8 @@ import { loginSchema } from '../validations/auth.schema';
 type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
-  const { login, isLoading } = useAuth();
+
+  const { login, isLoading } = useAuth(); 
   const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<LoginFormValues>({
@@ -38,22 +39,25 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     try {
       await login.mutateAsync(data);
-    } catch {
-      // Error handled in useAuth
+    } catch (error) {
+      
+      console.error(error);
     }
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+        {/* Email Field */}
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel htmlFor="login-email">Email</FormLabel>
               <FormControl>
                 <Input
+                  id="login-email"
                   placeholder="name@example.com"
                   type="email"
                   autoComplete="email"
@@ -66,19 +70,21 @@ export function LoginForm() {
           )}
         />
 
+        {/* Password Field */}
         <FormField
           control={form.control}
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel htmlFor="login-password">Password</FormLabel>
               <FormControl>
                 <div className="relative">
                   <Input
+                    id="login-password"
                     placeholder="••••••••"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
-                    disabled={isLoading}
+                    disabled={isLoading} 
                     {...field}
                   />
                   <Button
@@ -88,6 +94,8 @@ export function LoginForm() {
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword((prev) => !prev)}
                     disabled={isLoading}
+                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-pressed={showPassword}
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4 text-muted-foreground" />
@@ -102,6 +110,7 @@ export function LoginForm() {
           )}
         />
 
+        {/* Submit Button */}
         <Button type="submit" className="w-full" disabled={isLoading}>
           {isLoading ? (
             <>
@@ -115,7 +124,7 @@ export function LoginForm() {
 
         <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
-          <Link href="/register" className="text-primary hover:underline">
+          <Link href="/register" className="font-semibold text-primary underline">
             Sign up
           </Link>
         </p>

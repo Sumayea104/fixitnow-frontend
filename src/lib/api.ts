@@ -1,6 +1,7 @@
+
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace(/\/$/, '') || 'https://fixitnow-backend-m1ur.onrender.com/api';
 
-// Helper function for building correct URL paths
 const getFullUrl = (endpoint: string) => {
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
   return `${API_BASE}${cleanEndpoint}`;
