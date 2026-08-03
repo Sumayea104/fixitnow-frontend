@@ -1,7 +1,8 @@
 'use client';
 
+import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
-import { Card, CardContent } from '@/components/ui/card'; // 👈 CardHeader, CardTitle সরিয়ে দেওয়া হয়েছে
+import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
@@ -12,14 +13,13 @@ interface Booking {
   id: string;
   bookingNumber: string;
   status: string;
-  totalPrice: number;
-  scheduledDate: string;
-  scheduledTime: string;
+  totalPrice?: number;
+  scheduledDate?: string;
+  scheduledTime?: string;
   service?: { title: string };
   technician?: { user: { name: string } };
 }
 
-// API Response interface
 interface BookingsApiResponse {
   data: Booking[];
 }
@@ -30,30 +30,40 @@ export default function CustomerBookingsPage() {
   const { data, isLoading } = useQuery({
     queryKey: ['customer-bookings'],
     queryFn: async () => {
-      // 👈 Type assertion যুক্ত করে res.data টাইপ-সেফ করা হয়েছে
-      const res = (await api.get('/bookings')) as { data: BookingsApiResponse };
-      return res.data;
+      const res = (await api.get('/bookings')) as { data: BookingsApiResponse | Booking[] };
+      // API response structure-এর উপর নির্ভর করে ডাটা এক্সট্র্যাক্ট
+      if ('data' in res.data) {
+        return res.data.data;
+      }
+      return res.data as Booking[];
     },
     enabled: isAuthenticated,
   });
 
-  const bookings: Booking[] = data?.data || [];
+  const bookings: Booking[] = data || [];
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, string> = {
-      REQUESTED: 'bg-yellow-500',
-      ACCEPTED: 'bg-blue-500',
-      PAID: 'bg-purple-500',
-      IN_PROGRESS: 'bg-green-500',
-      COMPLETED: 'bg-gray-500',
-      CANCELLED: 'bg-red-500',
-      DECLINED: 'bg-red-300',
+      REQUESTED: 'bg-yellow-500 text-white',
+      ACCEPTED: 'bg-blue-500 text-white',
+      PAID: 'bg-purple-500 text-white',
+      IN_PROGRESS: 'bg-green-500 text-white',
+      COMPLETED: 'bg-gray-500 text-white',
+      CANCELLED: 'bg-red-500 text-white',
+      DECLINED: 'bg-red-400 text-white',
     };
-    return variants[status] || 'bg-gray-400';
+    return variants[status] || 'bg-gray-400 text-white';
   };
 
   if (!isAuthenticated) {
-    return <div>Please login to view bookings</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <p className="text-muted-foreground">Please login to view bookings</p>
+        <Link href="/login">
+          <Button className="mt-4">Go to Login</Button>
+        </Link>
+      </div>
+    );
   }
 
   if (isLoading) {
@@ -65,7 +75,7 @@ export default function CustomerBookingsPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 container mx-auto px-4 py-8">
       <div>
         <h1 className="text-3xl font-bold">My Bookings</h1>
         <p className="text-muted-foreground">View and manage your bookings</p>
@@ -75,32 +85,39 @@ export default function CustomerBookingsPage() {
         <Card>
           <CardContent className="text-center py-12">
             <p className="text-muted-foreground">No bookings yet</p>
-            <Button className="mt-4">Browse Services</Button>
+            <Link href="/services">
+              <Button className="mt-4">Browse Services</Button>
+            </Link>
           </CardContent>
         </Card>
       ) : (
         <div className="space-y-4">
           {bookings.map((booking) => (
-            <Card key={booking.id}>
+            <Card key={booking.id} className="hover:shadow-sm transition-shadow">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div>
-                    <p className="font-semibold">{booking.service?.title || 'Service'}</p>
+                    <p className="font-semibold text-lg">
+                      {booking.service?.title || 'Service'}
+                    </p>
                     <p className="text-sm text-muted-foreground">
-                      {booking.technician?.user?.name || 'Technician'}
+                      Technician: {booking.technician?.user?.name || 'Assigned soon'}
                     </p>
-                    <p className="text-sm">
-                      {new Date(booking.scheduledDate).toLocaleDateString()} at {booking.scheduledTime}
+                    <p className="text-sm mt-1">
+                      {booking.scheduledDate
+                        ? new Date(booking.scheduledDate).toLocaleDateString()
+                        : 'N/A'}{' '}
+                      at {booking.scheduledTime || 'N/A'}
                     </p>
-                    <p className="text-sm font-medium mt-1">
-                      Total: ${booking.totalPrice.toFixed(2)}
+                    <p className="text-sm font-semibold mt-2 text-primary">
+                      Total: ${booking.totalPrice?.toFixed(2) ?? '0.00'}
                     </p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex flex-col items-end gap-1">
                     <Badge className={getStatusBadge(booking.status)}>
                       {booking.status}
                     </Badge>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="text-xs text-muted-foreground">
                       #{booking.bookingNumber}
                     </p>
                   </div>
