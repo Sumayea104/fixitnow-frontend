@@ -1,12 +1,4 @@
-'use client';
-
-import dynamic from 'next/dynamic';
-import { Loader2 } from 'lucide-react';
-
-const LoginForm = dynamic(
-  () => import('@/features/auth/components/LoginForm'),
-  { ssr: false, loading: () => <Loader2 className="h-8 w-8 animate-spin" /> }
-);
+import { LoginForm } from '@/features/auth/components/LoginForm';
 
 export default function LoginPage() {
   return (
