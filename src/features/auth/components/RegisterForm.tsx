@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -24,6 +25,7 @@ import { registerSchema } from '../validations/auth.schema';
 type RegisterFormValues = z.infer<typeof registerSchema>;
 
 export function RegisterForm() {
+  const router = useRouter();
   const { register, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -42,6 +44,8 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       await register.mutateAsync(data);
+      // ✅ অ্যাকাউন্ট সফলভাবে তৈরি হওয়ার পর লগইন পেজে রিডাইরেক্ট হবে
+      router.push('/login');
     } catch {
       // Error handled in useAuth
     }
@@ -62,6 +66,7 @@ export function RegisterForm() {
                   id="name"
                   placeholder="John Doe"
                   type="text"
+                  autoComplete="name"
                   disabled={isLoading}
                   {...field}
                 />
@@ -155,7 +160,11 @@ export function RegisterForm() {
                     type="button"
                     variant="ghost"
                     size="sm"
-                    aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                    aria-label={
+                      showConfirmPassword
+                        ? 'Hide confirm password'
+                        : 'Show confirm password'
+                    }
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
                     disabled={isLoading}
