@@ -44,7 +44,7 @@ export function RegisterForm() {
   const onSubmit = async (data: RegisterFormValues) => {
     try {
       await register.mutateAsync(data);
-      // ✅ অ্যাকাউন্ট সফলভাবে তৈরি হওয়ার পর লগইন পেজে রিডাইরেক্ট হবে
+      
       router.push('/login');
     } catch {
       // Error handled in useAuth

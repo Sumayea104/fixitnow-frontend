@@ -1,14 +1,37 @@
 'use client';
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
 import { authService } from '../services/auth.service';
 import type { LoginInput, RegisterInput } from '../validations/auth.schema';
+import type { User } from '../types/auth.types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+
+type AuthMeResponse = {
+  user?: User | null;
+  data?: {
+    user?: User | null;
+  };
+};
 
 export function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
+
+  // Current Logged-in User Data Fetching
+  const { data: user, isLoading: isUserLoading } = useQuery<User | null>({
+    queryKey: ['user'],
+    queryFn: async () => {
+      try {
+        const response = (await authService.getMe()) as unknown as AuthMeResponse;
+        return response?.user ?? response?.data?.user ?? null;
+      } catch {
+        return null;
+      }
+    },
+    enabled: typeof window !== 'undefined' && !!localStorage.getItem('token'),
+    retry: false,
+  });
 
   // Login Mutation
   const login = useMutation({
@@ -57,15 +80,14 @@ export function useAuth() {
   };
 
   const isAuthenticated =
-  typeof window !== 'undefined'
-    ? !!localStorage.getItem('token')
-    : false;
+    typeof window !== 'undefined' ? !!localStorage.getItem('token') : false;
 
   return {
+    user: user || null,
     login,
     register,
     logout,
-    isLoading: login.isPending || register.isPending,
-  isAuthenticated,
+    isLoading: login.isPending || register.isPending || isUserLoading,
+    isAuthenticated,
   };
 }

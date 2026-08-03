@@ -30,8 +30,16 @@ export const authService = {
     return response;
   },
 
-  getMe: async (): Promise<{ success: boolean; data: { user: User } }> => {
-    return api.get<{ success: boolean; data: { user: User } }>('/auth/me');
+  getMe: async (): Promise<{ user: User }> => {
+    const res = await api.get<{
+      data?: {
+        data?: { user: User };
+        user?: User;
+      };
+      user?: User;
+    }>('/auth/me');
+
+    return (res.data?.data || res.data || { user: res.user }) as { user: User };
   },
 
   getToken: () => {
