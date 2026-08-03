@@ -1,6 +1,7 @@
 'use client';
 
-import { useQuery,  } from '@tanstack/react-query';
+import Link from 'next/link';
+import { useQuery } from '@tanstack/react-query';
 import { UsersIcon, CalendarIcon, DollarSignIcon, ShieldCheckIcon } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -20,14 +21,19 @@ export default function AdminDashboardPage() {
   const { data: stats, isLoading } = useQuery<Stats>({
     queryKey: ['admin-stats'],
     queryFn: async () => {
-      const res = await api.get('/admin/dashboard/stats') as {
+      const res = (await api.get('/admin/dashboard/stats')) as {
         data?: Stats | { data?: Stats };
       };
 
-      const payload = res.data;
+      const payload = res?.data;
 
       if (!payload) {
-        return undefined as unknown as Stats;
+        return {
+          users: { total: 0, active: 0, banned: 0 },
+          technicians: { total: 0, verified: 0, unverified: 0 },
+          bookings: { total: 0, pending: 0, completed: 0 },
+          revenue: { total: 0 },
+        };
       }
 
       return ('data' in payload ? payload.data : payload) as Stats;
@@ -35,7 +41,7 @@ export default function AdminDashboardPage() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 container mx-auto px-4 py-8">
       {/* Welcome */}
       <div>
         <h1 className="text-3xl font-bold tracking-tight">
@@ -47,12 +53,12 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {/* Total Users Card */}
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Total Users</CardTitle>
-            <UsersIcon className="h-4 w-4 text-muted-foreground" /> {/* 👈 Used Here */}
+            <UsersIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -68,7 +74,7 @@ export default function AdminDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Technicians</CardTitle>
-            <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" /> {/* 👈 Used Here */}
+            <ShieldCheckIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -84,7 +90,7 @@ export default function AdminDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Bookings</CardTitle>
-            <CalendarIcon className="h-4 w-4 text-muted-foreground" /> {/* 👈 Used Here */}
+            <CalendarIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -100,14 +106,14 @@ export default function AdminDashboardPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">Revenue</CardTitle>
-            <DollarSignIcon className="h-4 w-4 text-muted-foreground" /> {/* 👈 Used Here */}
+            <DollarSignIcon className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
               {isLoading ? (
                 <Skeleton className="h-8 w-16" />
               ) : (
-                `$${(stats?.revenue?.total ?? 0).toFixed(2)}`
+                `$${(Number(stats?.revenue?.total) || 0).toFixed(2)}`
               )}
             </div>
           </CardContent>
@@ -118,32 +124,38 @@ export default function AdminDashboardPage() {
       <div>
         <h2 className="text-xl font-semibold mb-4">Quick Actions</h2>
         <div className="grid gap-4 md:grid-cols-3">
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader>
-              <CardTitle className="text-sm">Manage Users</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">View and manage all users</p>
-            </CardContent>
-          </Card>
+          <Link href="/admin/users">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="text-sm">Manage Users</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">View and manage all users</p>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader>
-              <CardTitle className="text-sm">Manage Categories</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">Add or update service categories</p>
-            </CardContent>
-          </Card>
+          <Link href="/admin/categories">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="text-sm">Manage Categories</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Add or update service categories</p>
+              </CardContent>
+            </Card>
+          </Link>
 
-          <Card className="hover:shadow-md transition-shadow cursor-pointer">
-            <CardHeader>
-              <CardTitle className="text-sm">View All Bookings</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-sm text-muted-foreground">Oversee all platform bookings</p>
-            </CardContent>
-          </Card>
+          <Link href="/admin/bookings">
+            <Card className="hover:shadow-md transition-shadow cursor-pointer">
+              <CardHeader>
+                <CardTitle className="text-sm">View All Bookings</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">Oversee all platform bookings</p>
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </div>
     </div>

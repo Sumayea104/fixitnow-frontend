@@ -61,6 +61,20 @@ export default function AdminCategoriesPage() {
 
   const categories: Category[] = data?.data || [];
 
+  // Auto-generate slug from name during creation
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.value;
+    if (!editingCategory) {
+      const slug = name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      setFormData({ ...formData, name, slug });
+    } else {
+      setFormData({ ...formData, name });
+    }
+  };
+
   // Create category mutation
   const createCategory = useMutation({
     mutationFn: async (categoryData: { name: string; slug: string; description?: string }) => {
@@ -143,7 +157,7 @@ export default function AdminCategoriesPage() {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 container mx-auto px-4 py-8">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Categories</h1>
@@ -173,7 +187,7 @@ export default function AdminCategoriesPage() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={handleNameChange}
                   placeholder="e.g., Electrical"
                   required
                 />
@@ -221,7 +235,9 @@ export default function AdminCategoriesPage() {
       <Card>
         <CardContent className="p-6">
           {isLoading ? (
-            <div className="text-center py-8">Loading categories...</div>
+            <div className="flex h-96 items-center justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
           ) : categories.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No categories found. Create your first category!
@@ -247,7 +263,11 @@ export default function AdminCategoriesPage() {
                         {category.isActive ? 'Active' : 'Inactive'}
                       </Badge>
                     </TableCell>
-                    <TableCell>{new Date(category.createdAt).toLocaleDateString()}</TableCell>
+                    <TableCell>
+                      {category.createdAt
+                        ? new Date(category.createdAt).toLocaleDateString()
+                        : 'N/A'}
+                    </TableCell>
                     <TableCell className="text-right">
                       <div className="flex justify-end gap-2">
                         <Button
