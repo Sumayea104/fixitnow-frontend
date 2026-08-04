@@ -28,7 +28,6 @@ export function RegisterForm() {
   const router = useRouter();
   const { register, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const form = useForm({
     resolver: zodResolver(registerSchema),
@@ -139,48 +138,44 @@ export function RegisterForm() {
         />
 
         {/* Confirm Password Field */}
+        {/* Role Selection Field */}
         <FormField
           control={form.control}
-          name="confirmPassword"
+          name="role"
           render={({ field }) => (
             <FormItem>
-              <FormLabel htmlFor="confirmPassword">Confirm Password</FormLabel>
+              <FormLabel htmlFor="role">Select Account Type</FormLabel>
               <FormControl>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    placeholder="••••••••"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    autoComplete="new-password"
-                    disabled={isLoading}
-                    className="pr-10"
-                    {...field}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    aria-label={
-                      showConfirmPassword
-                        ? 'Hide confirm password'
-                        : 'Show confirm password'
-                    }
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    disabled={isLoading}
-                  >
-                    {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
+                <select
+                  id="role"
+                  disabled={isLoading}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                  {...field}
+                >
+                  <option value="CUSTOMER">Customer (Looking for Services)</option>
+                  <option value="TECHNICIAN">Technician (Offering Services)</option>
+                </select>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        {/* Role Selection Field */}
+<div className="space-y-2">
+  <label className="text-sm font-medium">Select Account Type</label>
+  <select
+    {...form.register('role')}
+    className="w-full px-3 py-2 border rounded-md bg-background text-foreground"
+  >
+    <option value="CUSTOMER">Customer (Looking for Services)</option>
+    <option value="TECHNICIAN">Technician (Offering Services)</option>
+  </select>
+  {form.formState.errors.role && (
+    <p className="text-sm text-red-500">
+      {form.formState.errors.role.message as string}
+    </p>
+  )}
+</div>
 
         {/* Submit Button */}
         <Button type="submit" className="w-full" disabled={isLoading}>

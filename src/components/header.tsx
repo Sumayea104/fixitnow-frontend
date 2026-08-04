@@ -13,7 +13,7 @@ export function Header() {
       <span>
         Get <strong className="text-white underline decoration-yellow-300 underline-offset-2">10% OFF</strong> on your first booking! Code: {' '}
         <span className="bg-white/20 dark:bg-blue-950/90 border border-white/30 dark:border-blue-500/30 text-white dark:text-blue-300 px-2 py-0.5 rounded-md font-mono font-bold tracking-wider mx-1 shadow-xs">
-          FIXITFIRST
+          FixItNow
         </span>
         • Special Offer for Dhaka City!
       </span>

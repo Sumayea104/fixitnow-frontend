@@ -264,10 +264,10 @@ export default function HomePage() {
           {/* LIMITED WIDTH CONTAINER WITH SMOOTH EDGE FADING */}
           <div className="max-w-3xl mx-auto overflow-hidden relative">
             
-            {/* 🌟 Left Fade Layer (Bame smooth milae jabe) */}
+            {/* 🌟 Left Fade Layer  */}
             <div className="absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-indigo-700 dark:from-slate-950 to-transparent z-10 pointer-events-none" />
             
-            {/* 🌟 Right Fade Layer (Dane smooth milae jabe) */}
+            {/* 🌟 Right Fade Layer  */}
             <div className="absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-indigo-700 dark:from-slate-950 to-transparent z-10 pointer-events-none" />
 
             {/* SLOW INFINITE TICKER TRACK */}
@@ -286,9 +286,10 @@ export default function HomePage() {
         {/* NAVBAR */}
         <div className="w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/85 dark:bg-slate-950/85">
           <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-            <Link href="/" className="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
-              FixIt<span className="text-slate-900 dark:text-white">Now</span>
-            </Link>
+            <Link href="/" className="text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight flex items-center gap-2">
+            <Wrench className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+            <span>FixIt<span className="text-slate-900 dark:text-white">Now</span></span>
+          </Link>
             <div className="flex items-center gap-4">
               <ThemeToggle />
               <Button asChild variant="outline" className="hidden sm:inline-flex rounded-xl bg-white/80 dark:bg-slate-900/80 border-slate-200 dark:border-slate-800 font-semibold">
