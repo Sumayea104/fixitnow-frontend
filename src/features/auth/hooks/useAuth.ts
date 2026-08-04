@@ -41,7 +41,11 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       const role = data.data.user.role.toLowerCase();
-      localStorage.setItem('token', data.data.token);
+      // Safe token check (handles undefined/null types)
+      const token = data.data.token || data.data.accessToken || '';
+      if (token) {
+        localStorage.setItem('token', token);
+      }
       toast.success('Logged in successfully');
       queryClient.invalidateQueries({ queryKey: ['user'] });
       router.push(`/${role}/dashboard`);
@@ -60,7 +64,11 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       const role = data.data.user.role.toLowerCase();
-      localStorage.setItem('token', data.data.token);
+      // Safe token check (handles undefined/null types)
+      const token = data.data.token || data.data.accessToken || '';
+      if (token) {
+        localStorage.setItem('token', token);
+      }
       toast.success('Account created successfully');
       queryClient.invalidateQueries({ queryKey: ['user'] });
       router.push(`/${role}/dashboard`);

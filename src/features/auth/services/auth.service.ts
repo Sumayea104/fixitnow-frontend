@@ -37,7 +37,7 @@ export const authService = {
         user?: User;
       };
       user?: User;
-    }>('/api/auth/me'); // ✅ Route path updated to /api/auth/me
+    }>('/api/auth/me');
 
     return (res.data?.data || res.data || { user: res.user }) as { user: User };
   },
