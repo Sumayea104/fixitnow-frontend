@@ -41,7 +41,6 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       const role = data.data.user.role.toLowerCase();
-      // Safe token check (handles undefined/null types)
       const token = data.data.token || data.data.accessToken || '';
       if (token) {
         localStorage.setItem('token', token);
@@ -64,7 +63,6 @@ export function useAuth() {
     },
     onSuccess: (data) => {
       const role = data.data.user.role.toLowerCase();
-      // Safe token check (handles undefined/null types)
       const token = data.data.token || data.data.accessToken || '';
       if (token) {
         localStorage.setItem('token', token);
