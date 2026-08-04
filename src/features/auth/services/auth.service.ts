@@ -12,24 +12,24 @@ export interface AuthResponse {
   success: boolean;
   message: string;
   data: {
-    token: string;
-    accessToken: string;
+    token?: string;
+    accessToken?: string;
     user: User;
   };
 }
 
 export const authService = {
-
-  login: async (data: LoginInput): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/login', data);
-    return response;
+  // 🌟 LOGIN
+  login: async (credentials: LoginInput): Promise<AuthResponse> => {
+    return api.post<AuthResponse>('/api/auth/login', credentials); 
   },
-
+  
+  // 🌟 REGISTER
   register: async (data: RegisterInput): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/register', data);
-    return response;
+    return api.post<AuthResponse>('/api/auth/register', data);
   },
 
+  // 🌟 GET CURRENT USER (ME)
   getMe: async (): Promise<{ user: User }> => {
     const res = await api.get<{
       data?: {
@@ -37,15 +37,16 @@ export const authService = {
         user?: User;
       };
       user?: User;
-    }>('/auth/me');
+    }>('/api/auth/me'); // ✅ Route path updated to /api/auth/me
 
     return (res.data?.data || res.data || { user: res.user }) as { user: User };
   },
 
+  // 🌟 GET LOCAL STORAGE TOKEN
   getToken: () => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('token');
     }
     return null;
-  }
+  },
 };
