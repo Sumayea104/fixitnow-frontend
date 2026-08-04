@@ -626,46 +626,7 @@ export default function HomePage() {
       </section>
 
       {/* 🌊 FOOTER */}
-      <footer className="relative overflow-hidden border-t border-slate-200/80 dark:border-slate-800 bg-white/60 dark:bg-slate-950/60 backdrop-blur-xl py-12 text-sm text-slate-600 dark:text-slate-400">
-        <div className="container relative z-10 mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="space-y-3">
-              <Link href="/" className="inline-block text-2xl font-black text-blue-600 dark:text-blue-400 tracking-tight">
-                FixIt<span className="text-slate-900 dark:text-white">Now</span>
-              </Link>
-              <p className="text-xs leading-relaxed text-slate-600 dark:text-slate-400">
-                Your trusted partner for home maintenance, repairs, and professional services on demand.
-              </p>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-3">Quick Links</h4>
-              <ul className="space-y-2 text-xs font-medium">
-                <li><Link href="/services" className="hover:text-blue-600 dark:hover:text-blue-400">All Services</Link></li>
-                <li><Link href="/about" className="hover:text-blue-600 dark:hover:text-blue-400">About Us</Link></li>
-                <li><Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400">Contact</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-3">Popular Services</h4>
-              <ul className="space-y-2 text-xs font-medium">
-                <li><Link href="/services" className="hover:text-blue-600 dark:hover:text-blue-400">AC Repair & Service</Link></li>
-                <li><Link href="/services" className="hover:text-blue-600 dark:hover:text-blue-400">Plumbing Solutions</Link></li>
-                <li><Link href="/services" className="hover:text-blue-600 dark:hover:text-blue-400">Electrical Maintenance</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-3">Legal</h4>
-              <ul className="space-y-2 text-xs font-medium">
-                <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Privacy Policy</Link></li>
-                <li><Link href="#" className="hover:text-blue-600 dark:hover:text-blue-400">Terms of Service</Link></li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-6 border-t border-slate-200/60 dark:border-slate-800/60 text-center text-xs font-medium text-slate-500 dark:text-slate-400">
-            © {new Date().getFullYear()} FixItNow Inc. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      
 
       {/* 🛠️ MECHANICAL GO-TO-TOP BUTTON */}
       <AnimatePresence>
