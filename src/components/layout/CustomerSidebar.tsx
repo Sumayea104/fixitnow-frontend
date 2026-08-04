@@ -9,11 +9,12 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useState } from 'react';
 
-export function CustomerSidebar() {
-  const pathname = usePathname();
-  const { logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
+interface SidebarContentProps {
+  pathname: string;
+  logout: () => void;
+}
 
+function SidebarContent({ pathname, logout }: SidebarContentProps) {
   const links = [
     { href: '/customer/dashboard', label: 'Dashboard', icon: HomeIcon },
     { href: '/customer/bookings', label: 'Bookings', icon: CalendarIcon },
@@ -22,8 +23,8 @@ export function CustomerSidebar() {
     { href: '/customer/reviews', label: 'Reviews', icon: StarIcon },
   ];
 
-  const SidebarContent = () => (
-    <>
+  return (
+    <div className="flex flex-col h-full">
       <div className="p-6">
         <h1 className="text-xl font-bold">FixItNow</h1>
         <p className="text-sm text-muted-foreground">Customer</p>
@@ -52,7 +53,7 @@ export function CustomerSidebar() {
         })}
       </nav>
 
-      <div className="p-4 border-t">
+      <div className="p-4 border-t mt-auto">
         <button
           onClick={logout}
           className="flex items-center gap-3 px-3 py-2 rounded-md text-sm w-full hover:bg-gray-100 transition-colors text-red-600"
@@ -61,14 +62,20 @@ export function CustomerSidebar() {
           Logout
         </button>
       </div>
-    </>
+    </div>
   );
+}
+
+export function CustomerSidebar() {
+  const pathname = usePathname();
+  const { logout } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden md:flex w-64 bg-white border-r flex-col min-h-screen sticky top-0">
-        <SidebarContent />
+        <SidebarContent pathname={pathname} logout={logout} />
       </aside>
 
       {/* Mobile Sidebar */}
@@ -79,7 +86,7 @@ export function CustomerSidebar() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-64 p-0">
-          <SidebarContent />
+          <SidebarContent pathname={pathname} logout={logout} />
         </SheetContent>
       </Sheet>
     </>

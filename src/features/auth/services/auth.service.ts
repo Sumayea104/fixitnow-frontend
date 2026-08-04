@@ -21,12 +21,12 @@ export interface AuthResponse {
 export const authService = {
 
   login: async (data: LoginInput): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/login', data);
+    const response = await api.post<AuthResponse>('/login', data);
     return response;
   },
 
   register: async (data: RegisterInput): Promise<AuthResponse> => {
-    const response = await api.post<AuthResponse>('/auth/register', data);
+    const response = await api.post<AuthResponse>('/register', data);
     return response;
   },
 
