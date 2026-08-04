@@ -3,7 +3,9 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from 'sonner';
 import './globals.css';
 import { QueryProvider } from '@/providers/QueryProvider';
-import { ThemeProvider } from '@/components/theme-provider'; // 👈 ThemeProvider ইম্পোর্ট করুন
+import { ThemeProvider } from '@/components/theme-provider'; 
+import { Header } from '@/components/header';
+import { Footer } from '@/components/footer';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -28,7 +30,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col justify-between`}
       >
         <ThemeProvider
           attribute="class"
@@ -37,7 +39,17 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <QueryProvider>
-            {children}
+            {/* 🌟 GLOBAL HEADER */}
+            <Header />
+
+            {/* MAIN CONTENT */}
+            <main className="flex-1 pt-28">
+              {children}
+            </main>
+
+            {/* 🌟 GLOBAL FOOTER */}
+            <Footer />
+
             <Toaster position="top-right" richColors />
           </QueryProvider>
         </ThemeProvider>
